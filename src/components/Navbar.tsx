@@ -8,7 +8,7 @@ const navItems = [
   { name: "About", path: "/about" },
   { name: "Projects", path: "/projects" },
   { name: "Skills", path: "/skills" },
-  { name: "Resume", path: "/resume" },
+  { name: "Experiences", path: "/resume" },
   { name: "Contact", path: "/contact" },
 ];
 

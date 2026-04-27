@@ -6,7 +6,7 @@ import { personalInfo, socialLinks } from "@/data/portfolio";
 
 const HomePage = () => {
   const typedText = useTypingEffect(
-    ["Full Stack Developer", "UI/UX Enthusiast", "Open Source Contributor", "Problem Solver"],
+    ["Full Stack Developer", "UI/UX Enthusiast", "Problem Solver"],
     80,
     2000
   );

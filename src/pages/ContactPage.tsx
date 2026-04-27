@@ -1,12 +1,14 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { Send, MapPin, Mail, Phone } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import SectionHeader from "@/components/SectionHeader";
 import { socialLinks, personalInfo } from "@/data/portfolio";
+import emailjs from '@emailjs/browser';
 
 const ContactPage = () => {
   const { toast } = useToast();
+  const formRef = useRef<HTMLFormElement>(null);
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const [sending, setSending] = useState(false);
 
@@ -17,11 +19,25 @@ const ContactPage = () => {
       return;
     }
     setSending(true);
-    // Simulate sending
-    await new Promise((r) => setTimeout(r, 1500));
-    toast({ title: "Message sent!", description: "Thanks for reaching out. I'll get back to you soon." });
-    setForm({ name: "", email: "", message: "" });
-    setSending(false);
+
+    try {
+      if (formRef.current) {
+        // NOTE: Replace these with your actual Service ID, Template ID, and Public Key from EmailJS
+        await emailjs.sendForm(
+          'service_f28m8o3',
+          'template_aa6jm1k',
+          formRef.current,
+          '8t8vLN5DOJCKicfdl'
+        );
+        toast({ title: "Message sent!", description: "Thanks for reaching out. I'll get back to you soon." });
+        setForm({ name: "", email: "", message: "" });
+      }
+    } catch (error) {
+      toast({ title: "Error sending message", description: "Please try again later or contact me directly via email.", variant: "destructive" });
+      console.error("EmailJS Error:", error);
+    } finally {
+      setSending(false);
+    }
   };
 
   return (
@@ -52,6 +68,13 @@ const ContactPage = () => {
                   <p className="text-sm font-medium">{personalInfo.location}</p>
                 </div>
               </div>
+              <div className="flex items-center gap-3">
+                <div className="p-2 rounded-lg bg-primary/10"><Phone className="w-4 h-4 text-primary" /></div>
+                <div>
+                  <p className="text-sm text-muted-foreground">Mobile No.</p>
+                  <p className="text-sm font-medium">{personalInfo.mobile}</p>
+                </div>
+              </div>
             </div>
 
             <div className="glass-card-hover p-6">
@@ -75,6 +98,7 @@ const ContactPage = () => {
 
           {/* Form */}
           <motion.form
+            ref={formRef}
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
@@ -85,6 +109,7 @@ const ContactPage = () => {
               <label className="block text-sm font-medium mb-1.5">Name</label>
               <input
                 type="text"
+                name="from_name"
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 className="w-full px-4 py-2.5 rounded-lg bg-secondary border border-border/50 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 transition-colors"
@@ -96,6 +121,7 @@ const ContactPage = () => {
               <label className="block text-sm font-medium mb-1.5">Email</label>
               <input
                 type="email"
+                name="from_email"
                 value={form.email}
                 onChange={(e) => setForm({ ...form, email: e.target.value })}
                 className="w-full px-4 py-2.5 rounded-lg bg-secondary border border-border/50 text-foreground placeholder:text-muted-foreground focus:outline-none focus:border-primary/50 transition-colors"
@@ -106,6 +132,7 @@ const ContactPage = () => {
             <div>
               <label className="block text-sm font-medium mb-1.5">Message</label>
               <textarea
+                name="message"
                 value={form.message}
                 onChange={(e) => setForm({ ...form, message: e.target.value })}
                 rows={5}
@@ -129,3 +156,5 @@ const ContactPage = () => {
 };
 
 export default ContactPage;
+
+

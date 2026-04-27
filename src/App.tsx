@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import Navbar from "@/components/Navbar";
+import CustomCursor from "@/components/CustomCursor";
 import Footer from "@/components/Footer";
 import HomePage from "./pages/HomePage";
 import AboutPage from "./pages/AboutPage";
@@ -20,6 +21,7 @@ const App = () => (
       <Toaster />
       <BrowserRouter>
         <div className="min-h-screen flex flex-col noise-bg">
+          <CustomCursor />
           <Navbar />
           <main className="flex-1">
             <Routes>
